@@ -143,7 +143,7 @@ export default function Header() {
               title="Open the 6-Step Storyline Interactive Simulation"
             >
               <Sparkles size={16} />
-              <span>▶️ SIH Demo Story</span>
+              <span className="demo-btn-label">▶️ SIH Demo</span>
             </button>
 
             <button

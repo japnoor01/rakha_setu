@@ -101,6 +101,7 @@ export default function InteractiveMap({
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [currentZoom, setCurrentZoom] = useState(14);
   const [cursorCoords, setCursorCoords] = useState(null);
+  const [legendOpen, setLegendOpen] = useState(false);
 
   const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN || localStorage.getItem('RAKSHA_MAPBOX_TOKEN') || '';
 
@@ -1030,10 +1031,19 @@ export default function InteractiveMap({
       </button>
 
       {/* COMPACT REALISTIC LEGEND WITH LAYER TOGGLE FILTERS */}
-      <div className="realistic-map-legend">
-        <div className="legend-head-row">
-          <span className="legend-brand-title">🗺️ GIS TELEMETRY LAYERS</span>
-          <span className="legend-area-name">{userLocation.area || 'Active Grid'}</span>
+      <div className={`realistic-map-legend ${legendOpen ? 'legend-expanded' : 'legend-collapsed'}`}>
+        <div
+          className="legend-head-row clickable-legend-head"
+          onClick={() => setLegendOpen(!legendOpen)}
+          role="button"
+          tabIndex={0}
+          title="Tap to toggle GIS telemetry layers"
+        >
+          <span className="legend-brand-title">🗺️ GIS LAYERS</span>
+          <div className="legend-meta-right">
+            <span className="legend-area-name">{userLocation.area || 'Active Grid'}</span>
+            <span className="legend-toggle-caret">{legendOpen ? '▼' : '▲'}</span>
+          </div>
         </div>
 
         <div className="legend-toggles-grid">
