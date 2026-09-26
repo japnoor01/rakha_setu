@@ -5,6 +5,8 @@ import InteractiveMap from './InteractiveMap';
 import CvSceneScanner from './CvSceneScanner';
 import { soundFx } from '../utils/audio';
 import { generateCitizenSafetyAssessment } from '../utils/aiService';
+import { api } from '../services/api';
+import CitizenMyReports from './CitizenMyReports';
 import {
   AlertTriangle,
   Home,
@@ -97,7 +99,7 @@ export default function CitizenDashboard() {
   // Active top alert
   const primaryAlert = alerts.find(a => a.active) || alerts[0];
 
-  const handleSubmitEmergency = (e) => {
+  const handleSubmitEmergency = async (e) => {
     e.preventDefault();
     const id = reportEmergency({
       disasterType,
@@ -107,6 +109,21 @@ export default function CitizenDashboard() {
       peopleAffected,
       coords: [userLocation.lat, userLocation.lng]
     });
+
+    try {
+      await api.reportDisaster({
+        title: `${disasterType} at ${location}`,
+        disasterType,
+        location,
+        severity,
+        description,
+        peopleAffected: Number(peopleAffected) || 1,
+        lat: userLocation.lat,
+        lng: userLocation.lng
+      });
+    } catch (err) {
+      console.warn('API report persistence warning:', err);
+    }
 
     setReportSuccess({ id });
     setTimeout(() => {
@@ -166,7 +183,7 @@ export default function CitizenDashboard() {
         <div className="header-brand">
           <span className="brand-badge-icon">🚨</span>
           <div>
-            <h1 className="brand-title">RAKSHA-SETU</h1>
+            <h2 className="brand-title">RAKSHA-SETU</h2>
             <span className="brand-sub">
               {isHindi ? 'नागरिक सुरक्षा एवं आपदा सहायता पोर्टल' : 'Citizen Safety & Disaster Relief Portal'}
             </span>
@@ -222,21 +239,22 @@ export default function CitizenDashboard() {
           <div className="alert-content-left">
             <div className="alert-pill-tag">
               <AlertTriangle size={18} className="alert-icon-anim" />
-              <span>{isHindi ? '⚠️ सक्रिय चेतावनी' : '⚠️ ACTIVE ALERT'}</span>
+              <span>{isHindi ? '⚠️ सक्रिय चेतावनी' : '⚠️ Active Alert'}</span>
             </div>
             <h2 className="alert-headline">{primaryAlert.title}</h2>
             <p className="alert-body-text">{primaryAlert.desc}</p>
           </div>
           <div className="alert-actions-right">
+            <a href="tel:112" className="btn-call-helpline" aria-label="Immediate 112 SOS Emergency Call">
+              <Phone size={15} /> 112 SOS
+            </a>
             <button
               className="btn-alert-details"
               onClick={() => setShowAlertDetailsModal(true)}
+              aria-label="View Alert Details"
             >
-              {isHindi ? 'विवरण देखें' : 'VIEW DETAILS'} <ArrowRight size={16} />
+              {isHindi ? 'विवरण देखें' : 'View Details'} <ArrowRight size={16} />
             </button>
-            <a href="tel:112" className="btn-call-helpline">
-              <Phone size={15} /> 112 SOS
-            </a>
           </div>
         </section>
       )}
@@ -281,11 +299,11 @@ export default function CitizenDashboard() {
             <span className="big-symbol">🚨</span>
           </div>
           <div className="action-text">
-            <h3>{isHindi ? 'आपातकाल रिपोर्ट करें' : 'REPORT EMERGENCY'}</h3>
+            <h3>{isHindi ? 'आपातकाल रिपोर्ट करें' : 'Report Emergency'}</h3>
             <p>{isHindi ? 'फंसे लोगों, बाढ़ या आग की सूचना तुरंत भेजें' : 'Report trapped people, flood water, or urgent SOS'}</p>
           </div>
           <button className="btn-primary-sos">
-            <ShieldAlert size={18} /> {isHindi ? 'आपातकालीन सहायता मांगें' : 'REQUEST IMMEDIATE HELP'}
+            <ShieldAlert size={18} /> {isHindi ? 'आपातकालीन सहायता मांगें' : 'Request Immediate Help'}
           </button>
         </div>
 
@@ -303,7 +321,7 @@ export default function CitizenDashboard() {
             <span className="big-symbol">🏠</span>
           </div>
           <div className="action-text">
-            <h3>{isHindi ? 'आश्रय खोजें' : 'FIND SHELTER'}</h3>
+            <h3>{isHindi ? 'आश्रय खोजें' : 'Find Shelter'}</h3>
             <p>{isHindi ? 'निकटतम सुरक्षित राहत शिविर और भोजन केंद्र' : 'Locate nearby designated safe camps & food relief'}</p>
           </div>
           <div className="shelter-preview-pill">
@@ -327,7 +345,7 @@ export default function CitizenDashboard() {
             <span className="big-symbol">🗺️</span>
           </div>
           <div className="action-text">
-            <h3>{isHindi ? 'सुरक्षित क्षेत्र' : 'SAFE ZONES'}</h3>
+            <h3>{isHindi ? 'सुरक्षित क्षेत्र' : 'Safe Zones'}</h3>
             <p>{isHindi ? 'ग्रीन सुरक्षित जोन और लाल खतरे वाले क्षेत्रों का नक्शा' : 'Color-coded danger and safe evacuation sectors'}</p>
           </div>
           <div className="zone-status-pills">
@@ -344,13 +362,13 @@ export default function CitizenDashboard() {
           tabIndex={0}
         >
           <div className="card-badge" style={{ background: '#0284c7', color: '#fff' }}>
-            {isHindi ? 'कंप्यूटर विज़न' : 'COMPUTER VISION'}
+            {isHindi ? 'कंप्यूटर विज़न' : 'Computer Vision'}
           </div>
           <div className="action-icon-wrapper" style={{ background: 'rgba(56, 189, 248, 0.25)', border: '1px solid #38bdf8' }}>
             <span className="big-symbol">📸</span>
           </div>
           <div className="action-text">
-            <h3>{isHindi ? 'एआई फोटो व क्षति स्कैनर' : 'AI PHOTO & DAMAGE SCANNER'}</h3>
+            <h3>{isHindi ? 'एआई फोटो व क्षति स्कैनर' : 'AI Photo & Damage Scanner'}</h3>
             <p>{isHindi ? 'तस्वीर स्कैन कर जल-स्तर व फंसे लोगों का पता लगाएं' : 'Scan flood photos to detect stranded civilians & water depth'}</p>
           </div>
           <button
@@ -361,7 +379,7 @@ export default function CitizenDashboard() {
               setShowCvScannerModal(true);
             }}
           >
-            <Scan size={18} /> {isHindi ? 'कैमरा व फोटो स्कैन करें' : 'SCAN PHOTO WITH AI'}
+            <Scan size={18} /> {isHindi ? 'कैमरा व फोटो स्कैन करें' : 'Scan Photo with AI'}
           </button>
         </div>
       </section>
@@ -377,7 +395,7 @@ export default function CitizenDashboard() {
               <div>
                 <div className="advisor-badge-pill">
                   <Sparkles size={13} className="text-cyan" />
-                  <span>{isHindi ? 'जेमिनी 2.5 फ्लैश और हाइड्रोलॉजिकल एआई द्वारा संचालित' : 'POWERED BY GEMINI 2.5 FLASH & HYDROMET ML'}</span>
+                  <span>{isHindi ? 'जेमिनी 2.5 फ्लैश और हाइड्रोलॉजिकल एआई द्वारा संचालित' : 'Powered by Gemini 2.5 Flash & Hydromet ML'}</span>
                 </div>
                 <h3 className="advisor-title">
                   🤖 {isHindi ? 'एआई व्यक्तिगत सुरक्षा एवं जोखिम सलाहकार' : 'AI Personal Safety & Evacuation Advisor'}
@@ -433,35 +451,47 @@ export default function CitizenDashboard() {
               </select>
             </div>
 
-            <div className="input-group-col">
-              <label>👥 {isHindi ? 'संवेदनशील पारिवारिक सदस्य:' : 'Vulnerable Members:'}</label>
-              <div className="vulnerable-chips-row">
+            <div className="input-group-col full-width-span">
+              <label id="vulnerable-members-label">👥 {isHindi ? 'संवेदनशील पारिवारिक सदस्य:' : 'Vulnerable Members:'}</label>
+              <div className="vulnerable-chips-row" role="group" aria-labelledby="vulnerable-members-label">
                 <button
                   type="button"
+                  role="button"
+                  aria-pressed={citizenAiInput.vulnerableMembers.includes('elderly')}
                   className={`chip-toggle ${citizenAiInput.vulnerableMembers.includes('elderly') ? 'chip-active' : ''}`}
                   onClick={() => toggleVulnerableMember('elderly')}
                 >
+                  {citizenAiInput.vulnerableMembers.includes('elderly') && <span className="chip-check-icon">✓ </span>}
                   👴 {isHindi ? 'बुजुर्ग' : 'Elderly'}
                 </button>
                 <button
                   type="button"
+                  role="button"
+                  aria-pressed={citizenAiInput.vulnerableMembers.includes('infants')}
                   className={`chip-toggle ${citizenAiInput.vulnerableMembers.includes('infants') ? 'chip-active' : ''}`}
                   onClick={() => toggleVulnerableMember('infants')}
                 >
+                  {citizenAiInput.vulnerableMembers.includes('infants') && <span className="chip-check-icon">✓ </span>}
                   👶 {isHindi ? 'शिशु' : 'Infant'}
                 </button>
                 <button
                   type="button"
+                  role="button"
+                  aria-pressed={citizenAiInput.vulnerableMembers.includes('patients')}
                   className={`chip-toggle ${citizenAiInput.vulnerableMembers.includes('patients') ? 'chip-active' : ''}`}
                   onClick={() => toggleVulnerableMember('patients')}
                 >
+                  {citizenAiInput.vulnerableMembers.includes('patients') && <span className="chip-check-icon">✓ </span>}
                   🏥 {isHindi ? 'मरीज' : 'Patient'}
                 </button>
                 <button
                   type="button"
+                  role="button"
+                  aria-pressed={citizenAiInput.vulnerableMembers.includes('pets')}
                   className={`chip-toggle ${citizenAiInput.vulnerableMembers.includes('pets') ? 'chip-active' : ''}`}
                   onClick={() => toggleVulnerableMember('pets')}
                 >
+                  {citizenAiInput.vulnerableMembers.includes('pets') && <span className="chip-check-icon">✓ </span>}
                   🐾 {isHindi ? 'पालतू' : 'Pets'}
                 </button>
               </div>
@@ -560,13 +590,16 @@ export default function CitizenDashboard() {
         </div>
       </section>
 
+      {/* 📋 MY SUBMITTED INCIDENTS & EMERGENCY REPORT TRACKER */}
+      <CitizenMyReports onNewReportClick={() => setShowReportModal(true)} />
+
       {/* INTERACTIVE MAP CONTAINER */}
       <section className="citizen-map-section" id="citizen-map-anchor">
         <div className="section-header-row">
           <div>
             <div className="map-badge-tag">
               <span className="live-dot-green"></span>
-              <span>LIVE GIS SATELLITE TELEMETRY</span>
+              <span>Live GIS Satellite Telemetry</span>
             </div>
             <h3 className="section-title">
               🗺️ {isHindi ? 'लाइव सुरक्षा एवं राहत मानचित्र' : 'Live Safety & Relief Map'}

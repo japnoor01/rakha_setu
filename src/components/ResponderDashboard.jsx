@@ -4,6 +4,7 @@ import InteractiveMap from './InteractiveMap';
 import confetti from 'canvas-confetti';
 import { calculateDistance } from '../utils/locationService';
 import CvSceneScanner from './CvSceneScanner';
+import { api } from '../services/api';
 import {
   Navigation,
   CheckCircle2,
@@ -38,6 +39,7 @@ export default function ResponderDashboard() {
     responderTeam.status === 'Deployed' || responderTeam.status === 'On Scene'
   );
   const [showCvBriefing, setShowCvBriefing] = useState(false);
+  const [responderAvailability, setResponderAvailability] = useState('Available');
 
   const activeTask = incidents.find(i => i.id === selectedIncidentId) || incidents[0];
   const isAccepted = responderTeam.status === 'Deployed' || responderTeam.status === 'On Scene' || activeTask?.status === 'Accepted';
@@ -58,14 +60,26 @@ export default function ResponderDashboard() {
 
   const estimatedMinutes = Math.max(2, Math.round(((distanceMeters / 1000) / 32) * 60)); // ~32 km/h response speed
 
-  const handleAccept = () => {
+  const handleAccept = async () => {
     acceptTask(activeTask.id);
     setShowRouteAnimation(true);
+    setResponderAvailability('Deployed');
+    try {
+      await api.respondToIncident({
+        incidentId: activeTask.id,
+        action: 'accept',
+        status: 'Accepted',
+        notes: `Accepted by ${responderTeam.name}. Unit dispatched.`
+      });
+    } catch (err) {
+      console.warn('API incident accept notice:', err);
+    }
   };
 
-  const handleStatusAdvance = (nextStatus) => {
+  const handleStatusAdvance = async (nextStatus) => {
     updateIncidentStatus(activeTask.id, nextStatus);
     if (nextStatus === 'Resolved') {
+      setResponderAvailability('Available');
       try {
         confetti({
           particleCount: 80,
@@ -75,6 +89,16 @@ export default function ResponderDashboard() {
       } catch {
         // ignore
       }
+    }
+    try {
+      await api.respondToIncident({
+        incidentId: activeTask.id,
+        action: 'status_update',
+        status: nextStatus,
+        notes: `Status advanced to ${nextStatus}`
+      });
+    } catch (err) {
+      console.warn('API incident status advance notice:', err);
     }
   };
 
@@ -96,6 +120,24 @@ export default function ResponderDashboard() {
         </div>
 
         <div className="header-right">
+          <div className="responder-availability-group">
+            <span className="avail-label">MY AVAILABILITY:</span>
+            <button
+              className={`btn-avail-chip ${responderAvailability === 'Available' ? 'chip-avail-active' : ''}`}
+              onClick={() => setResponderAvailability('Available')}
+              title="Declare unit Available"
+            >
+              🟢 Ready
+            </button>
+            <button
+              className={`btn-avail-chip ${responderAvailability === 'On Standby' ? 'chip-standby-active' : ''}`}
+              onClick={() => setResponderAvailability('On Standby')}
+              title="Declare unit On Standby"
+            >
+              🟡 Standby
+            </button>
+          </div>
+
           <div className={`status-pill ${responderTeam.status === 'Available' ? 'status-available' : 'status-deployed'}`}>
             <span className="status-dot"></span>
             <span>STATUS: {responderTeam.status.toUpperCase()}</span>

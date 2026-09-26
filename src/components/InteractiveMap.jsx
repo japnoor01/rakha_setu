@@ -477,11 +477,29 @@ export default function InteractiveMap({
       }
     }
 
+    // Helper to disperse/offset close markers near user coordinates so elements never overlap
+    const disperseCoords = (coords, index, total = 4, baseDist = 0.0022) => {
+      if (!coords || coords.length < 2) return coords;
+      const [cLat, cLng] = coords;
+      const dLat = cLat - uLat;
+      const dLng = cLng - uLng;
+      const dist = Math.sqrt(dLat * dLat + dLng * dLng);
+      if (dist < 0.0022) {
+        const angle = (index * (2 * Math.PI / Math.max(total, 4))) + (Math.PI / 4);
+        return [
+          uLat + Math.sin(angle) * baseDist,
+          uLng + Math.cos(angle) * (baseDist * 1.25)
+        ];
+      }
+      return coords;
+    };
+
     // 🌊 D. REALISTIC IoT WATER LEVEL SENSORS (TELEMETRY GAUGES)
     if (layerVisibility.sensors && waterSensors.length > 0) {
-      waterSensors.forEach(sensor => {
+      waterSensors.forEach((sensor, sIdx) => {
         const isCritical = sensor.waterLevel > sensor.dangerLevel;
         const currentWaterVal = (sensor.waterLevel + (localFloodRise - 1.5) * 0.4).toFixed(2);
+        const resolvedSensorCoords = disperseCoords(sensor.coords, sIdx, waterSensors.length, 0.0026);
 
         const sensorIcon = L.divIcon({
           className: 'realistic-sensor-icon',
@@ -501,7 +519,7 @@ export default function InteractiveMap({
           iconAnchor: [30, 25],
         });
 
-        const marker = L.marker(sensor.coords, { icon: sensorIcon, zIndexOffset: 750 }).addTo(sensorLayer);
+        const marker = L.marker(resolvedSensorCoords, { icon: sensorIcon, zIndexOffset: 750 }).addTo(sensorLayer);
         marker.bindPopup(`
           <div class="gis-popup-card sensor-gis-popup">
             <div class="popup-header-bar ${isCritical ? 'danger-bar' : 'info-bar'}">
@@ -631,11 +649,12 @@ export default function InteractiveMap({
     }
 
     // 🚨 G. REALISTIC EMERGENCY INCIDENT STROBE DISTRESS BEACON (#RS1024)
-    incidents.forEach(inc => {
+    incidents.forEach((inc, incIdx) => {
       if (inc.status === 'Resolved' && mode !== 'admin') return;
 
       const isCritical = inc.severity === 'Critical';
       const isTarget = activeIncidentId === inc.id;
+      const resolvedIncCoords = disperseCoords(inc.coords, incIdx, incidents.length, 0.0030);
 
       const incidentIcon = L.divIcon({
         className: 'realistic-incident-icon',
@@ -656,7 +675,7 @@ export default function InteractiveMap({
         iconAnchor: [30, 30],
       });
 
-      const marker = L.marker(inc.coords, { icon: incidentIcon, zIndexOffset: 950 }).addTo(incLayer);
+      const marker = L.marker(resolvedIncCoords, { icon: incidentIcon, zIndexOffset: 950 }).addTo(incLayer);
       marker.bindPopup(`
         <div class="gis-popup-card incident-gis-popup">
           <div class="popup-header-bar danger-bar">
@@ -1031,11 +1050,22 @@ export default function InteractiveMap({
       </button>
 
       {/* COMPACT REALISTIC LEGEND WITH LAYER TOGGLE FILTERS */}
-      <div className={`realistic-map-legend ${legendOpen ? 'legend-expanded' : 'legend-collapsed'}`}>
+      <div
+        className={`realistic-map-legend ${legendOpen ? 'legend-expanded' : 'legend-collapsed'}`}
+        role="region"
+        aria-label="GIS Telemetry Layers Control"
+      >
         <div
           className="legend-head-row clickable-legend-head"
           onClick={() => setLegendOpen(!legendOpen)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setLegendOpen(!legendOpen);
+            }
+          }}
           role="button"
+          aria-expanded={legendOpen}
           tabIndex={0}
           title="Tap to toggle GIS telemetry layers"
         >

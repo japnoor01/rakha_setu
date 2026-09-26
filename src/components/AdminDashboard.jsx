@@ -4,6 +4,7 @@ import { useDisaster } from '../context/DisasterContext';
 import InteractiveMap from './InteractiveMap';
 import MlHydrologyPredictor from './MlHydrologyPredictor';
 import CvSceneScanner from './CvSceneScanner';
+import UserManagementModal from './UserManagementModal';
 import {
   ShieldAlert,
   Send,
@@ -44,6 +45,7 @@ export default function AdminDashboard() {
   // Create alert modal state
   const [showCreateAlertModal, setShowCreateAlertModal] = useState(false);
   const [showDroneCvModal, setShowDroneCvModal] = useState(false);
+  const [showUserMgmtModal, setShowUserMgmtModal] = useState(false);
   const [newAlertType, setNewAlertType] = useState('Flood Warning');
   const [newAlertZone, setNewAlertZone] = useState(userLocation.area || 'Zone 3');
   const [newAlertMsg, setNewAlertMsg] = useState(`Heavy flooding expected near ${userLocation.address}. Immediate evacuation advised.`);
@@ -130,6 +132,15 @@ export default function AdminDashboard() {
             <span className="pulsing-green"></span>
             <span>SYSTEM HEALTH: 99.98% OPTIMAL</span>
           </div>
+
+          <button
+            className="btn-admin-manage-users"
+            onClick={() => setShowUserMgmtModal(true)}
+            title="Open Central User Management and Role Provisioning"
+          >
+            <Users size={16} />
+            <span>Manage Users & Roles</span>
+          </button>
 
           <div className="admin-profile-badge">
             <div className="avatar-shield">NDMA</div>
@@ -598,6 +609,12 @@ export default function AdminDashboard() {
         </div>,
         document.body
       )}
+
+      {/* User Directory Management Modal */}
+      <UserManagementModal
+        isOpen={showUserMgmtModal}
+        onClose={() => setShowUserMgmtModal(false)}
+      />
     </div>
   );
 }

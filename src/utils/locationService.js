@@ -119,8 +119,8 @@ export function generateGeoEnvironment(centerLat, centerLng, areaName = 'Local S
     }
   ];
 
-  // Citizen Emergency at or near current user position
-  const userIncidentCoords = [centerLat, centerLng];
+  // Citizen Emergency near current user position (cleanly offset to prevent marker overlap)
+  const userIncidentCoords = computeOffset(centerLat, centerLng, 340, 135);
   const fireIncidentCoords = computeOffset(centerLat, centerLng, 800, 65);
   const roadBlockCoords = computeOffset(centerLat, centerLng, 950, 175);
 

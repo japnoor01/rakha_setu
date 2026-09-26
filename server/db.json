@@ -1,0 +1,306 @@
+{
+  "users": [
+    {
+      "id": "usr_admin_001",
+      "name": "Chief Officer Rajesh Kumar",
+      "email": "admin@rakshasetu.gov.in",
+      "passwordHash": "6ddb2822873b5f7e0d0c477a01c7f60a61c3fa9b27e45ecb6c61469324722ac9f97b83f75122d990187c073f5fa8c1e2d3e6965d757743c88909198db9a4c3e4",
+      "salt": "a99e5e9ee9d1bd7f22ed166a772e8826",
+      "role": "ADMIN",
+      "department": "National Disaster Management Authority (NDMA)",
+      "badgeId": "NDMA-HQ-01",
+      "phone": "+91 11 2670 1700",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "usr_resp_001",
+      "name": "Inspector Vikram Rathore",
+      "email": "responder@rakshasetu.gov.in",
+      "passwordHash": "35e6759b108a3f54081f84666325508c78dd8a9c90ed1c300c6079e461f7084c5f91467f44190ed110b68b8cf2e8668b9fda5824c26a42e58ae3c87799ae87fd",
+      "salt": "0f819cfbb832c3dd566d3426aacccffd",
+      "role": "RESPONDER",
+      "badgeId": "NDRF-Alpha-04",
+      "specialty": "Flood & Deep Water Search Rescue",
+      "status": "Available",
+      "phone": "+91 98101 23456",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "usr_cit_001",
+      "name": "Aarav Sharma",
+      "email": "citizen@gmail.com",
+      "passwordHash": "29f92c434b30353d146fb66b01ca1d0d2a6214427b08a3037f058e6242a88b089d48d5670114944fcd5a10558a532426dd0246ec8d5a8004e96c31275a2f2696",
+      "salt": "00169fe0e174a7eb03e6ed831b2adabc",
+      "role": "CITIZEN",
+      "phone": "+91 98765 43210",
+      "location": "Riverdale Block 4, Central District",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "usr_1790404481174_xj3gt",
+      "name": "Rohan Sharma",
+      "email": "rohan_1790404481133@gmail.com",
+      "passwordHash": "9ebda9406fec34ad54b7e3e5d18b6ec2b80c9f732dcbcb9128d143d796197cf92dfefbe831d3280fcb2e5335ae29d0ce682f24792dacd55aab17a9b99bc93829",
+      "salt": "11149991564667fda25c2dd667a469e7",
+      "role": "CITIZEN",
+      "createdAt": "2026-09-26T06:34:41.174Z",
+      "updatedAt": "2026-09-26T06:34:41.174Z"
+    },
+    {
+      "id": "usr_1790405653018_rbdwr",
+      "name": "Rohan Sharma",
+      "email": "rohan_1790405652979@gmail.com",
+      "passwordHash": "d8c81487866fd7dac5865c797fd92510820c6096cb61c36f6459a4b7e45356808f2319a11ed4805d6f4a453e0b3e47cd539eca231f9c109f50cbc1ced22d3baa",
+      "salt": "4817a5fc3e1527a7658a9d25be0c7f7b",
+      "role": "CITIZEN",
+      "createdAt": "2026-09-26T06:54:13.017Z",
+      "updatedAt": "2026-09-26T06:54:13.017Z"
+    },
+    {
+      "id": "usr_1790405986618_x078t",
+      "name": "Rohan Sharma",
+      "email": "rohan_1790405986579@gmail.com",
+      "passwordHash": "7f42a43ca2d868d8a8db194ffdde46298ee9bfbbcad9cb8fa0fb131f01c2581652927ca5965764462be5bcf3dac3c2d0f0786715f12fa589ebca4e783fcd30f4",
+      "salt": "095036468344c40315ede8d6c506ea84",
+      "role": "CITIZEN",
+      "createdAt": "2026-09-26T06:59:46.618Z",
+      "updatedAt": "2026-09-26T06:59:46.618Z"
+    },
+    {
+      "id": "usr_1790417813766_97noh",
+      "name": "Rohan Sharma",
+      "email": "rohan_1790417813696@gmail.com",
+      "passwordHash": "ea810684349593cba098ca105f721c98c6b346779a4a8d24d33be5575fc5f65c68a2859fa5bd2cd370d2f57199bbc631fea90fac8f530b4efd47d4ab4ff8634a",
+      "salt": "ec203ba7dc622e80c618568d80b339e4",
+      "role": "CITIZEN",
+      "createdAt": "2026-09-26T10:16:53.766Z",
+      "updatedAt": "2026-09-26T10:16:53.766Z"
+    }
+  ],
+  "reports": [
+    {
+      "id": "RS8393",
+      "title": "Water logging in ground floor",
+      "type": "Flood Rescue",
+      "location": "Civil Lines Sector 4",
+      "coords": [
+        28.6139,
+        77.209
+      ],
+      "severity": "High",
+      "peopleAffected": 3,
+      "description": "Basement flooding with elderly person stuck.",
+      "status": "Pending",
+      "reportedByUserId": "usr_cit_001",
+      "reportedByUserName": "Aarav Sharma",
+      "assignedTeamId": null,
+      "assignedTeamName": null,
+      "reportedAt": "2026-09-26T10:16:53.517Z",
+      "updatedAt": "2026-09-26T10:16:53.517Z",
+      "responseHistory": [
+        {
+          "status": "Reported",
+          "time": "2026-09-26T10:16:53.517Z",
+          "note": "Report filed by Aarav Sharma (CITIZEN)"
+        }
+      ]
+    },
+    {
+      "id": "RS2445",
+      "title": "Water logging in ground floor",
+      "type": "Flood Rescue",
+      "location": "Civil Lines Sector 4",
+      "coords": [
+        28.6139,
+        77.209
+      ],
+      "severity": "High",
+      "peopleAffected": 3,
+      "description": "Basement flooding with elderly person stuck.",
+      "status": "Pending",
+      "reportedByUserId": "usr_cit_001",
+      "reportedByUserName": "Aarav Sharma",
+      "assignedTeamId": null,
+      "assignedTeamName": null,
+      "reportedAt": "2026-09-26T06:59:46.472Z",
+      "updatedAt": "2026-09-26T06:59:46.472Z",
+      "responseHistory": [
+        {
+          "status": "Reported",
+          "time": "2026-09-26T06:59:46.472Z",
+          "note": "Report filed by Aarav Sharma (CITIZEN)"
+        }
+      ]
+    },
+    {
+      "id": "RS1809",
+      "title": "Water logging in ground floor",
+      "type": "Flood Rescue",
+      "location": "Civil Lines Sector 4",
+      "coords": [
+        28.6139,
+        77.209
+      ],
+      "severity": "High",
+      "peopleAffected": 3,
+      "description": "Basement flooding with elderly person stuck.",
+      "status": "Pending",
+      "reportedByUserId": "usr_cit_001",
+      "reportedByUserName": "Aarav Sharma",
+      "assignedTeamId": null,
+      "assignedTeamName": null,
+      "reportedAt": "2026-09-26T06:54:12.876Z",
+      "updatedAt": "2026-09-26T06:54:12.876Z",
+      "responseHistory": [
+        {
+          "status": "Reported",
+          "time": "2026-09-26T06:54:12.876Z",
+          "note": "Report filed by Aarav Sharma (CITIZEN)"
+        }
+      ]
+    },
+    {
+      "id": "RS4594",
+      "title": "Water logging in ground floor",
+      "type": "Flood Rescue",
+      "location": "Civil Lines Sector 4",
+      "coords": [
+        28.6139,
+        77.209
+      ],
+      "severity": "High",
+      "peopleAffected": 3,
+      "description": "Basement flooding with elderly person stuck.",
+      "status": "Pending",
+      "reportedByUserId": "usr_cit_001",
+      "reportedByUserName": "Aarav Sharma",
+      "assignedTeamId": null,
+      "assignedTeamName": null,
+      "reportedAt": "2026-09-26T06:34:41.029Z",
+      "updatedAt": "2026-09-26T06:34:41.029Z",
+      "responseHistory": [
+        {
+          "status": "Reported",
+          "time": "2026-09-26T06:34:41.029Z",
+          "note": "Report filed by Aarav Sharma (CITIZEN)"
+        }
+      ]
+    },
+    {
+      "id": "RS1024",
+      "title": "Urgent Flood Rescue Required",
+      "type": "Flood Rescue",
+      "location": "Riverdale Block 4, Yamuna Basin",
+      "coords": [
+        28.6189,
+        77.214
+      ],
+      "severity": "Critical",
+      "peopleAffected": 24,
+      "description": "Ground floor submerged by 1.8m surge. 24 residents and 3 elderly citizens stranded on roof. Need immediate boat evacuation.",
+      "status": "In Progress",
+      "reportedByUserId": "usr_cit_001",
+      "reportedByUserName": "Aarav Sharma",
+      "assignedTeamId": "usr_resp_001",
+      "assignedTeamName": "Inspector Vikram Rathore",
+      "reportedAt": "2026-09-26T05:51:25.184Z",
+      "updatedAt": "2026-09-26T10:16:53.691Z",
+      "responseHistory": [
+        {
+          "status": "Reported",
+          "time": "2026-09-26T05:51:25.184Z",
+          "note": "Disaster reported via Citizen Portal"
+        },
+        {
+          "status": "Accepted",
+          "time": "2026-09-26T06:11:25.184Z",
+          "note": "NDRF Team Alpha dispatched"
+        },
+        {
+          "status": "Accepted",
+          "time": "2026-09-26T06:34:41.082Z",
+          "by": "Inspector Vikram Rathore",
+          "note": "Status updated to Accepted"
+        },
+        {
+          "status": "In Progress",
+          "time": "2026-09-26T06:34:41.130Z",
+          "by": "Chief Officer Rajesh Kumar",
+          "note": "Status updated to In Progress"
+        },
+        {
+          "status": "Accepted",
+          "time": "2026-09-26T06:54:12.925Z",
+          "by": "Inspector Vikram Rathore",
+          "note": "Status updated to Accepted"
+        },
+        {
+          "status": "In Progress",
+          "time": "2026-09-26T06:54:12.974Z",
+          "by": "Chief Officer Rajesh Kumar",
+          "note": "Status updated to In Progress"
+        },
+        {
+          "status": "Accepted",
+          "time": "2026-09-26T06:59:46.524Z",
+          "by": "Inspector Vikram Rathore",
+          "note": "Status updated to Accepted"
+        },
+        {
+          "status": "In Progress",
+          "time": "2026-09-26T06:59:46.573Z",
+          "by": "Chief Officer Rajesh Kumar",
+          "note": "Status updated to In Progress"
+        },
+        {
+          "status": "Accepted",
+          "time": "2026-09-26T10:16:53.607Z",
+          "by": "Inspector Vikram Rathore",
+          "note": "Status updated to Accepted"
+        },
+        {
+          "status": "In Progress",
+          "time": "2026-09-26T10:16:53.691Z",
+          "by": "Chief Officer Rajesh Kumar",
+          "note": "Status updated to In Progress"
+        }
+      ]
+    },
+    {
+      "id": "RS1025",
+      "title": "Bridge Embankment Soil Washout",
+      "type": "Infrastructure Breach",
+      "location": "Bridge Sector 12 Arterial Access",
+      "coords": [
+        28.625,
+        77.221
+      ],
+      "severity": "High",
+      "peopleAffected": 6,
+      "description": "Road embankment collapsed due to flood surge. Traffic severed.",
+      "status": "Pending",
+      "reportedByUserId": "usr_cit_001",
+      "reportedByUserName": "Aarav Sharma",
+      "assignedTeamId": null,
+      "assignedTeamName": null,
+      "reportedAt": "2026-09-26T06:14:25.184Z",
+      "updatedAt": "2026-09-26T06:14:25.184Z",
+      "responseHistory": [
+        {
+          "status": "Reported",
+          "time": "2026-09-26T06:14:25.184Z",
+          "note": "Disaster reported via Citizen Portal"
+        }
+      ]
+    }
+  ],
+  "systemSettings": {
+    "registrationAllowed": true,
+    "defaultAlertLevel": "Warning",
+    "maintenanceMode": false,
+    "smsGatewayActive": true
+  }
+}

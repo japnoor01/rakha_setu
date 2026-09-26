@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { useDisaster } from '../context/DisasterContext';
+import { useAuth } from '../context/AuthContext';
+import { ROLE_DETAILS, ROLES } from '../types/roles';
 import DemoTourModal from './DemoTourModal';
 import ApiSettingsModal from './ApiSettingsModal';
+import UserManagementModal from './UserManagementModal';
 import {
   Volume2,
   VolumeX,
@@ -14,6 +17,8 @@ import {
   Building2,
   UserCheck,
   Key,
+  Users,
+  LogOut,
 } from 'lucide-react';
 import { soundFx } from '../utils/audio';
 
@@ -30,8 +35,11 @@ export default function Header() {
     detectPresentLocation,
   } = useDisaster();
 
+  const { user, logout, hasAccessToTab } = useAuth();
+
   const [showDemoModal, setShowDemoModal] = useState(false);
   const [showApiModal, setShowApiModal] = useState(false);
+  const [showUserMgmtModal, setShowUserMgmtModal] = useState(false);
 
   const toggleSound = () => {
     const nextVal = !soundEnabled;
@@ -42,13 +50,16 @@ export default function Header() {
     }
   };
 
+  const roleMeta = ROLE_DETAILS[user?.role] || ROLE_DETAILS[ROLES.CITIZEN];
+  const isAdmin = user?.role === ROLES.ADMIN;
+
   return (
     <>
       <header className="global-system-header">
         {/* Top Hackathon & Branding Bar */}
         <div className="sih-meta-bar">
           <div className="sih-brand-left">
-            <span className="sih-tag">SMART INDIA HACKATHON 2026</span>
+            <span className="sih-tag">Smart India Hackathon 2026</span>
             <span className="ps-id">PS ID: SIH26206 • Disaster Management</span>
             <span className="team-badge">TEAM MAVERICKS</span>
           </div>
@@ -62,8 +73,8 @@ export default function Header() {
               <span className="pulse-network-dot"></span>
               <span>📍 {userLocation.area ? `${userLocation.area}, ${userLocation.city}` : 'GPS: Detecting Location...'}</span>
             </button>
-            <a href="tel:112" className="emergency-call-badge">
-              <PhoneCall size={12} /> NDRF / DDMA HELPLINE: 112 / 1070
+            <a href="tel:112" className="emergency-call-badge" aria-label="Call NDRF and DDMA Emergency Helpline 112 or 1070">
+              <PhoneCall size={14} /> NDRF &amp; DDMA Helpline: 112 / 1070
             </a>
           </div>
         </div>
@@ -85,58 +96,81 @@ export default function Header() {
             </div>
           </div>
 
-          {/* 3 DISTINCT PURPOSE DASHBOARDS SWITCHER + TRI-SPLIT */}
+          {/* RBAC FILTERED DASHBOARDS SWITCHER */}
           <nav className="dashboard-navigation-tabs">
-            <button
-              className={`nav-tab-btn ${activeTab === 'citizen' ? 'active citizen-active' : ''}`}
-              onClick={() => setActiveTab('citizen')}
-            >
-              <UserCheck size={18} />
-              <div className="tab-text-group">
-                <span className="tab-title">1. 👤 Citizen</span>
-                <span className="tab-desc">Danger & SOS Help</span>
-              </div>
-              {alerts.some(a => a.active) && <span className="tab-alert-badge">!</span>}
-            </button>
+            {hasAccessToTab('citizen') && (
+              <button
+                className={`nav-tab-btn ${activeTab === 'citizen' ? 'active citizen-active' : ''}`}
+                onClick={() => setActiveTab('citizen')}
+                title="Citizen Emergency & SOS Portal"
+              >
+                <UserCheck size={18} />
+                <div className="tab-text-group">
+                  <span className="tab-title">1. 👤 Citizen</span>
+                  <span className="tab-desc">Danger & SOS Help</span>
+                </div>
+                {alerts.some(a => a.active) && <span className="tab-alert-badge">!</span>}
+              </button>
+            )}
 
-            <button
-              className={`nav-tab-btn ${activeTab === 'responder' ? 'active responder-active' : ''}`}
-              onClick={() => setActiveTab('responder')}
-            >
-              <Radio size={18} />
-              <div className="tab-text-group">
-                <span className="tab-title">2. 🚑 Responder</span>
-                <span className="tab-desc">Team Alpha Terminal</span>
-              </div>
-              <span className="tab-counter-badge">{resources.activeIncidentsCount}</span>
-            </button>
+            {hasAccessToTab('responder') && (
+              <button
+                className={`nav-tab-btn ${activeTab === 'responder' ? 'active responder-active' : ''}`}
+                onClick={() => setActiveTab('responder')}
+                title="Responder Incident Response Terminal"
+              >
+                <Radio size={18} />
+                <div className="tab-text-group">
+                  <span className="tab-title">2. 🚑 Responder</span>
+                  <span className="tab-desc">Team Alpha Terminal</span>
+                </div>
+                <span className="tab-counter-badge">{resources.activeIncidentsCount}</span>
+              </button>
+            )}
 
-            <button
-              className={`nav-tab-btn ${activeTab === 'admin' ? 'active admin-active' : ''}`}
-              onClick={() => setActiveTab('admin')}
-            >
-              <Building2 size={18} />
-              <div className="tab-text-group">
-                <span className="tab-title">3. 🏛️ Admin Command</span>
-                <span className="tab-desc">Predict, Alert & Control</span>
-              </div>
-            </button>
+            {hasAccessToTab('admin') && (
+              <button
+                className={`nav-tab-btn ${activeTab === 'admin' ? 'active admin-active' : ''}`}
+                onClick={() => setActiveTab('admin')}
+                title="Central Admin Command & Multi-Agency Dispatch"
+              >
+                <Building2 size={18} />
+                <div className="tab-text-group">
+                  <span className="tab-title">3. 🏛️ Admin Command</span>
+                  <span className="tab-desc">Predict, Alert & Control</span>
+                </div>
+              </button>
+            )}
 
-            <button
-              className={`nav-tab-btn tri-view-tab ${activeTab === 'tri-view' ? 'active tri-active' : ''}`}
-              onClick={() => setActiveTab('tri-view')}
-              title="Show all 3 Dashboards on a single screen"
-            >
-              <LayoutGrid size={18} />
-              <div className="tab-text-group">
-                <span className="tab-title">⚡ Tri-Split View</span>
-                <span className="tab-desc">Live Sim Wall</span>
-              </div>
-            </button>
+            {hasAccessToTab('tri-view') && (
+              <button
+                className={`nav-tab-btn tri-view-tab ${activeTab === 'tri-view' ? 'active tri-active' : ''}`}
+                onClick={() => setActiveTab('tri-view')}
+                title="Show all 3 Dashboards on a single multi-monitor simulation wall"
+              >
+                <LayoutGrid size={18} />
+                <div className="tab-text-group">
+                  <span className="tab-title">⚡ Tri-Split View</span>
+                  <span className="tab-desc">Live Sim Wall</span>
+                </div>
+              </button>
+            )}
           </nav>
 
           {/* Action Bar */}
           <div className="navbar-action-buttons">
+            {/* Admin-only User Directory Management */}
+            {isAdmin && (
+              <button
+                className="btn-users-mgmt"
+                onClick={() => setShowUserMgmtModal(true)}
+                title="User Accounts & RBAC Directory"
+              >
+                <Users size={16} />
+                <span className="btn-mgmt-label">Users</span>
+              </button>
+            )}
+
             <button
               className="btn-storyline-demo pulse-btn"
               onClick={() => setShowDemoModal(true)}
@@ -169,13 +203,47 @@ export default function Header() {
             >
               <RotateCcw size={18} />
             </button>
+
+            {/* Authenticated User Status & Logout */}
+            <div className="header-user-badge">
+              <div
+                className="role-avatar-icon"
+                style={{ background: roleMeta.bg, borderColor: roleMeta.borderColor }}
+              >
+                <span>{roleMeta.icon}</span>
+              </div>
+              <div className="header-user-meta">
+                <span className="header-user-name" title={user?.email || ''}>
+                  {user?.name || 'Authorized'}
+                </span>
+                <span
+                  className="header-role-pill"
+                  style={{ color: roleMeta.color, borderColor: roleMeta.borderColor }}
+                >
+                  {roleMeta.label}
+                </span>
+              </div>
+              <button
+                className="btn-logout-header"
+                onClick={logout}
+                title="Secure Sign Out"
+              >
+                <LogOut size={16} />
+              </button>
+            </div>
           </div>
         </div>
       </header>
 
-      {/* Demo Tour Modal & API Keys Modal */}
+      {/* Modals */}
       <DemoTourModal isOpen={showDemoModal} onClose={() => setShowDemoModal(false)} />
       <ApiSettingsModal isOpen={showApiModal} onClose={() => setShowApiModal(false)} />
+      {isAdmin && (
+        <UserManagementModal
+          isOpen={showUserMgmtModal}
+          onClose={() => setShowUserMgmtModal(false)}
+        />
+      )}
     </>
   );
 }

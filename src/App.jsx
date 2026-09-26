@@ -1,25 +1,72 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { DisasterProvider, useDisaster } from './context/DisasterContext';
 import Header from './components/Header';
 import CitizenDashboard from './components/CitizenDashboard';
 import ResponderDashboard from './components/ResponderDashboard';
 import AdminDashboard from './components/AdminDashboard';
 import TriSplitView from './components/TriSplitView';
-import { Activity, ShieldCheck, Cpu, Terminal, ChevronUp, ChevronDown } from 'lucide-react';
+import LoginView from './components/LoginView';
+import AccessDenied from './components/AccessDenied';
+import { Activity, Terminal, ChevronUp, ChevronDown, ShieldAlert } from 'lucide-react';
 
-function DashboardRenderer() {
-  const { activeTab, activityLogs } = useDisaster();
+function AuthenticatedApp() {
+  const { user, isAuthenticated, isLoading, hasAccessToTab, getDefaultTabForRole } = useAuth();
+  const { activeTab, setActiveTab, activityLogs } = useDisaster();
   const [showLogsDrawer, setShowLogsDrawer] = useState(false);
+
+  // Sync active tab when user changes or on first login
+  useEffect(() => {
+    if (user && !hasAccessToTab(activeTab)) {
+      setActiveTab(getDefaultTabForRole(user.role));
+    }
+  }, [user]);
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="auth-boot-loading-screen">
+        <div className="boot-pulse-ring">
+          <ShieldAlert size={48} className="pulse-cyan" />
+        </div>
+        <h3>RAKSHA-SETU CRYPTOGRAPHIC BUS</h3>
+        <p>Verifying secure session token & initializing role permissions...</p>
+      </div>
+    );
+  }
+
+  // Unauthenticated: show Login/Registration Command Screen
+  if (!isAuthenticated) {
+    return (
+      <LoginView
+        onLoginSuccess={(loggedInUser) => {
+          setActiveTab(getDefaultTabForRole(loggedInUser.role));
+        }}
+      />
+    );
+  }
+
+  // Role Access Verification: If user lacks permission for the active tab, render 403 Access Denied
+  const isAuthorizedForCurrentTab = hasAccessToTab(activeTab);
 
   return (
     <div className="app-main-layout">
       <Header />
 
       <main className="dashboard-content-viewport">
-        {activeTab === 'citizen' && <CitizenDashboard />}
-        {activeTab === 'responder' && <ResponderDashboard />}
-        {activeTab === 'admin' && <AdminDashboard />}
-        {activeTab === 'tri-view' && <TriSplitView />}
+        {!isAuthorizedForCurrentTab ? (
+          <AccessDenied
+            attemptedTab={activeTab}
+            onReturn={(fallbackTab) => setActiveTab(fallbackTab)}
+          />
+        ) : (
+          <>
+            {activeTab === 'citizen' && <CitizenDashboard />}
+            {activeTab === 'responder' && <ResponderDashboard />}
+            {activeTab === 'admin' && <AdminDashboard />}
+            {activeTab === 'tri-view' && <TriSplitView />}
+          </>
+        )}
       </main>
 
       {/* Floating System Audit Log Ticker & Drawer */}
@@ -69,8 +116,10 @@ function DashboardRenderer() {
 
 export default function App() {
   return (
-    <DisasterProvider>
-      <DashboardRenderer />
-    </DisasterProvider>
+    <AuthProvider>
+      <DisasterProvider>
+        <AuthenticatedApp />
+      </DisasterProvider>
+    </AuthProvider>
   );
 }
