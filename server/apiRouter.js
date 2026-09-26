@@ -19,6 +19,17 @@ function readBody(req) {
     if (req.body && typeof req.body === 'object') {
       return resolve(req.body);
     }
+    if (req.readableEnded || req.complete) {
+      if (!req.body) return resolve({});
+      if (typeof req.body === 'string') {
+        try {
+          return resolve(JSON.parse(req.body));
+        } catch {
+          return resolve({});
+        }
+      }
+      return resolve(req.body);
+    }
     let body = '';
     req.on('data', chunk => {
       body += chunk;
@@ -69,10 +80,15 @@ function authenticateUser(req) {
  * Compatible with Vite dev server middleware and Node http / Express servers
  */
 export async function handleApiRequest(req, res, next) {
-  // Parse URL pathname
-  const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
-  const pathname = url.pathname;
-  const method = req.method.toUpperCase();
+  // Parse URL pathname and normalize trailing slash
+  let pathname = '';
+  let method = (req.method || 'GET').toUpperCase();
+  try {
+    const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+    pathname = (url.pathname || '').replace(/\/+$/, '') || '/';
+  } catch {
+    pathname = (req.url || '').split('?')[0].replace(/\/+$/, '') || '/';
+  }
 
   // Only handle /api routes
   if (!pathname.startsWith('/api')) {

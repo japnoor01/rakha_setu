@@ -8,6 +8,16 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://vite.dev/config/
 export default defineConfig({
+  server: {
+    host: '0.0.0.0',
+    port: 5173,
+    strictPort: false,
+  },
+  preview: {
+    host: '0.0.0.0',
+    port: 5173,
+    strictPort: false,
+  },
   resolve: {
     alias: {
       '@designcodeio/threeui/style.css': path.resolve(__dirname, 'src/shaders/threeui.css'),

@@ -78,9 +78,93 @@
       "role": "CITIZEN",
       "createdAt": "2026-09-26T10:16:53.766Z",
       "updatedAt": "2026-09-26T10:16:53.766Z"
+    },
+    {
+      "id": "usr_1790419400221_f1f52",
+      "name": "Test",
+      "email": "t@t.com",
+      "passwordHash": "c6ff66d9f76663a0edb3edff875454f65d9e41ad051842253661202e4883d2d44efd6359180b35eb95a3c3cd2cb26e0c8fb632a522ec59e99fd51b12accc391c",
+      "salt": "b5322cb25fb94f651fdc5c00bb18e4ef",
+      "role": "CITIZEN",
+      "createdAt": "2026-09-26T10:43:20.221Z",
+      "updatedAt": "2026-09-26T10:43:20.221Z"
+    },
+    {
+      "id": "usr_1790420279395_2hycb",
+      "name": "Rohan Sharma",
+      "email": "rohan_1790420279326@gmail.com",
+      "passwordHash": "bb726b6a66b363bdbe07698312bed92d69dfd4f264f102ffa7e8e02ab571bc4b0af29f163d2334b9cad5c3a1b754d71f6f2635fa0c5ec79476d1add962ab7630",
+      "salt": "b98d08c1a2a1cbe875b2f7379af9c98c",
+      "role": "CITIZEN",
+      "createdAt": "2026-09-26T10:57:59.395Z",
+      "updatedAt": "2026-09-26T10:57:59.395Z"
+    },
+    {
+      "id": "usr_1790420796934_f1a2y",
+      "name": "Rohan Sharma",
+      "email": "rohan_1790420796790@gmail.com",
+      "passwordHash": "90baf7115b3572a851dfee8b7f12b290facff1b995b49cf01551f66562befe8044d8753ee4155382235dac7565170c9b05d9cfad429c0d94f02494fe0d7d26bb",
+      "salt": "32e696e1c935bd8cea5275c754d22f7e",
+      "role": "CITIZEN",
+      "createdAt": "2026-09-26T11:06:36.934Z",
+      "updatedAt": "2026-09-26T11:06:36.934Z"
     }
   ],
   "reports": [
+    {
+      "id": "RS7969",
+      "title": "Water logging in ground floor",
+      "type": "Flood Rescue",
+      "location": "Civil Lines Sector 4",
+      "coords": [
+        28.6139,
+        77.209
+      ],
+      "severity": "High",
+      "peopleAffected": 3,
+      "description": "Basement flooding with elderly person stuck.",
+      "status": "Pending",
+      "reportedByUserId": "usr_cit_001",
+      "reportedByUserName": "Aarav Sharma",
+      "assignedTeamId": null,
+      "assignedTeamName": null,
+      "reportedAt": "2026-09-26T11:06:36.575Z",
+      "updatedAt": "2026-09-26T11:06:36.575Z",
+      "responseHistory": [
+        {
+          "status": "Reported",
+          "time": "2026-09-26T11:06:36.575Z",
+          "note": "Report filed by Aarav Sharma (CITIZEN)"
+        }
+      ]
+    },
+    {
+      "id": "RS5559",
+      "title": "Water logging in ground floor",
+      "type": "Flood Rescue",
+      "location": "Civil Lines Sector 4",
+      "coords": [
+        28.6139,
+        77.209
+      ],
+      "severity": "High",
+      "peopleAffected": 3,
+      "description": "Basement flooding with elderly person stuck.",
+      "status": "Pending",
+      "reportedByUserId": "usr_cit_001",
+      "reportedByUserName": "Aarav Sharma",
+      "assignedTeamId": null,
+      "assignedTeamName": null,
+      "reportedAt": "2026-09-26T10:57:59.131Z",
+      "updatedAt": "2026-09-26T10:57:59.131Z",
+      "responseHistory": [
+        {
+          "status": "Reported",
+          "time": "2026-09-26T10:57:59.131Z",
+          "note": "Report filed by Aarav Sharma (CITIZEN)"
+        }
+      ]
+    },
     {
       "id": "RS8393",
       "title": "Water logging in ground floor",
@@ -207,7 +291,7 @@
       "assignedTeamId": "usr_resp_001",
       "assignedTeamName": "Inspector Vikram Rathore",
       "reportedAt": "2026-09-26T05:51:25.184Z",
-      "updatedAt": "2026-09-26T10:16:53.691Z",
+      "updatedAt": "2026-09-26T11:06:36.782Z",
       "responseHistory": [
         {
           "status": "Reported",
@@ -264,6 +348,30 @@
         {
           "status": "In Progress",
           "time": "2026-09-26T10:16:53.691Z",
+          "by": "Chief Officer Rajesh Kumar",
+          "note": "Status updated to In Progress"
+        },
+        {
+          "status": "Accepted",
+          "time": "2026-09-26T10:57:59.239Z",
+          "by": "Inspector Vikram Rathore",
+          "note": "Status updated to Accepted"
+        },
+        {
+          "status": "In Progress",
+          "time": "2026-09-26T10:57:59.320Z",
+          "by": "Chief Officer Rajesh Kumar",
+          "note": "Status updated to In Progress"
+        },
+        {
+          "status": "Accepted",
+          "time": "2026-09-26T11:06:36.677Z",
+          "by": "Inspector Vikram Rathore",
+          "note": "Status updated to Accepted"
+        },
+        {
+          "status": "In Progress",
+          "time": "2026-09-26T11:06:36.782Z",
           "by": "Chief Officer Rajesh Kumar",
           "note": "Status updated to In Progress"
         }
